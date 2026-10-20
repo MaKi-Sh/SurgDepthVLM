@@ -1,0 +1,396 @@
+{
+    "$defs": {
+        "Forceps": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "enum": [
+                        "bipolar_forceps",
+                        "prograsp_forceps"
+                    ],
+                    "title": "Tooltype",
+                    "type": "string"
+                },
+                "state": {
+                    "enum": [
+                        "open",
+                        "closed",
+                        "holding",
+                        "unclear"
+                    ],
+                    "title": "State",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tooltype",
+                "state"
+            ],
+            "title": "Forceps",
+            "type": "object"
+        },
+        "MiscAndOther": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "enum": [
+                        "suturing_needle",
+                        "clamps",
+                        "ultrasound_probe",
+                        "other"
+                    ],
+                    "title": "Tooltype",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tooltype"
+            ],
+            "title": "MiscAndOther",
+            "type": "object"
+        },
+        "NeedleDriver": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "const": "large_needle_driver",
+                    "title": "Tooltype",
+                    "type": "string"
+                },
+                "state": {
+                    "enum": [
+                        "open",
+                        "closed",
+                        "holding",
+                        "unclear"
+                    ],
+                    "title": "State",
+                    "type": "string"
+                },
+                "contact_with_needle": {
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "true",
+                                "false",
+                                "unclear"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Contact With Needle"
+                }
+            },
+            "required": [
+                "tooltype",
+                "state"
+            ],
+            "title": "NeedleDriver",
+            "type": "object"
+        },
+        "Polygon": {
+            "additionalProperties": false,
+            "properties": {
+                "vertices": {
+                    "items": {
+                        "maxItems": 2,
+                        "minItems": 2,
+                        "prefixItems": [
+                            {
+                                "minimum": 0,
+                                "type": "number"
+                            },
+                            {
+                                "minimum": 0,
+                                "type": "number"
+                            }
+                        ],
+                        "type": "array"
+                    },
+                    "minItems": 3,
+                    "title": "Vertices",
+                    "type": "array"
+                }
+            },
+            "required": [
+                "vertices"
+            ],
+            "title": "Polygon",
+            "type": "object"
+        },
+        "Scissors": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "const": "monopolar_curved_scissors",
+                    "title": "Tooltype",
+                    "type": "string"
+                },
+                "state": {
+                    "enum": [
+                        "open",
+                        "closed",
+                        "unclear"
+                    ],
+                    "title": "State",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tooltype",
+                "state"
+            ],
+            "title": "Scissors",
+            "type": "object"
+        },
+        "Stapler": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "const": "stapler",
+                    "title": "Tooltype",
+                    "type": "string"
+                },
+                "state": {
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "open",
+                                "closed",
+                                "firing",
+                                "unclear"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "State"
+                }
+            },
+            "required": [
+                "tooltype"
+            ],
+            "title": "Stapler",
+            "type": "object"
+        },
+        "Suction": {
+            "additionalProperties": false,
+            "properties": {
+                "tooltype": {
+                    "const": "suction",
+                    "title": "Tooltype",
+                    "type": "string"
+                },
+                "state": {
+                    "enum": [
+                        "on",
+                        "off",
+                        "unclear"
+                    ],
+                    "title": "State",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tooltype",
+                "state"
+            ],
+            "title": "Suction",
+            "type": "object"
+        },
+        "Tissue": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "title": "Id",
+                    "type": "string"
+                },
+                "tissue_type": {
+                    "title": "Tissue Type",
+                    "type": "string"
+                },
+                "geometry": {
+                    "$ref": "#/$defs/Polygon"
+                }
+            },
+            "required": [
+                "id",
+                "tissue_type",
+                "geometry"
+            ],
+            "title": "Tissue",
+            "type": "object"
+        },
+        "Tools": {
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "title": "Id",
+                    "type": "string"
+                },
+                "tool": {
+                    "discriminator": {
+                        "mapping": {
+                            "bipolar_forceps": "#/$defs/Forceps",
+                            "clamps": "#/$defs/MiscAndOther",
+                            "large_needle_driver": "#/$defs/NeedleDriver",
+                            "monopolar_curved_scissors": "#/$defs/Scissors",
+                            "other": "#/$defs/MiscAndOther",
+                            "prograsp_forceps": "#/$defs/Forceps",
+                            "stapler": "#/$defs/Stapler",
+                            "suction": "#/$defs/Suction",
+                            "suturing_needle": "#/$defs/MiscAndOther",
+                            "ultrasound_probe": "#/$defs/MiscAndOther"
+                        },
+                        "propertyName": "tooltype"
+                    },
+                    "oneOf": [
+                        {
+                            "$ref": "#/$defs/Scissors"
+                        },
+                        {
+                            "$ref": "#/$defs/Forceps"
+                        },
+                        {
+                            "$ref": "#/$defs/Suction"
+                        },
+                        {
+                            "$ref": "#/$defs/NeedleDriver"
+                        },
+                        {
+                            "$ref": "#/$defs/Stapler"
+                        },
+                        {
+                            "$ref": "#/$defs/MiscAndOther"
+                        }
+                    ],
+                    "title": "Tool"
+                },
+                "depth_layer": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "const": "unclear",
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Depth Layer"
+                },
+                "geometry": {
+                    "$ref": "#/$defs/Polygon"
+                },
+                "contact": {
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "true",
+                                "false",
+                                "unclear"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Contact"
+                },
+                "contact_loc": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Polygon"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null
+                },
+                "action_state": {
+                    "anyOf": [
+                        {
+                            "enum": [
+                                "Idle",
+                                "Grasping",
+                                "Retraction",
+                                "Tissue Manipulation",
+                                "Tool Manipulation",
+                                "Cutting",
+                                "Cauterization",
+                                "Suction",
+                                "Looping",
+                                "Suturing",
+                                "Staple",
+                                "Ultrasound Sensing",
+                                "Clipping",
+                                "Other"
+                            ],
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Action State"
+                }
+            },
+            "required": [
+                "id",
+                "tool",
+                "geometry"
+            ],
+            "title": "Tools",
+            "type": "object"
+        }
+    },
+    "additionalProperties": false,
+    "properties": {
+        "tissue": {
+            "anyOf": [
+                {
+                    "items": {
+                        "$ref": "#/$defs/Tissue"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": "Tissue"
+        },
+        "tools": {
+            "anyOf": [
+                {
+                    "items": {
+                        "$ref": "#/$defs/Tools"
+                    },
+                    "type": "array"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": null,
+            "title": "Tools"
+        }
+    },
+    "title": "Frame",
+    "type": "object"
+}
